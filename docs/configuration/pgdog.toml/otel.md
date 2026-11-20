@@ -85,3 +85,29 @@ corresponding `pgdog.toml` values (or supply a value when the setting is omitted
 PgDog automatically sets the following resource attributes on every exported metric:
 `service.name` (defaults to `pgdog`), `service.instance.id`, and `host.name`. Use
 `OTEL_RESOURCE_ATTRIBUTES` to add or override any of these.
+
+## Examples
+
+### Axiom
+
+[Axiom](https://axiom.co) accepts OTLP metrics over HTTP. Set `endpoint` to the `/v1/metrics` URL of your Axiom [edge deployment](https://axiom.co/docs/reference/edge-deployments), and pass an API token and the name of a metrics dataset as headers:
+
+=== "pgdog.toml"
+    ```toml
+    [otel]
+    endpoint = "https://us-east-1.aws.edge.axiom.co/v1/metrics"
+
+    [otel.headers]
+    Authorization = "Bearer xaat-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    X-Axiom-Metrics-Dataset = "pgdog-metrics"
+    ```
+=== "Helm chart"
+    ```yaml
+    otel:
+      endpoint: "https://us-east-1.aws.edge.axiom.co/v1/metrics"
+      headers:
+        Authorization: "Bearer xaat-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        X-Axiom-Metrics-Dataset: "pgdog-metrics"
+    ```
+
+PgDog sends metrics as OTLP JSON. Axiom accepts JSON metrics when JSON metrics ingestion is enabled for your organization. For more information, see [Send OpenTelemetry data to Axiom](https://axiom.co/docs/send-data/opentelemetry).
